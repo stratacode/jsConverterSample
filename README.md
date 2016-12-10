@@ -1,7 +1,7 @@
 
 First install the coreFramework bundle of layers in the bundles directory. From this directory:
 
-(cd bundles; git clone https://github.com/stratacode/coreFramework)
+    (cd bundles; git clone https://github.com/stratacode/coreFramework)
 
 Put the StrataCode/bin directory in your path.  The sample files are in bundles/userLayers/sampleLayer/
 
@@ -23,5 +23,17 @@ The sampleLayer extends the js.allInOne.main layer which puts all of the code in
 
 One of the problems of converting between Java and JS is the potential for handling special cases that arise, due to Number/Integer/Double differences or naming conflicts.  The JSSettings annotation supports ways to workaround these problems in the generated code.  If you can't modify the source, you can add "annotation layers" which just add annotations using a StrataCode 'modify' operator (i.e. just putting "@JSSettings(...) MyClass {}"  in the right file in a layer which extends the layer containing MyClass.
 
-See (the javadoc)[http://www.stratacode.com/javadoc/sc/js/JSSettings.html]
+See [the javadoc](http://www.stratacode.com/javadoc/sc/js/JSSettings.html)
 # jsConverterSample
+
+See your generated javascript file in the js/sample.js file from "Source" view in the browser, or on the file system in: build/sampleLayer/web/js/sample.js.
+
+Some important files:
+
+* js/jvsys.js - generated Java java.sys, java.util classes from Apache 8 Java classes in coreFramework/js/sys - Note these files are named '.scj' only for the IntelliJ plugin so they are mapped as StrataCode files, not the native Java engine.
+* js/javasys.js - natively written Java classes java.sys, java.util classes (copied from coreFramework/js/core/js)
+* js/sccore.js - core functions used in the generated JS templates  (also from coreFramework/js/core/js)
+
+* js/tags.js,  - not used in this sample - the SC web framework.  We need to create a base-layer which does not include this and other SC framework JS files but you can just ignore them for now.
+
+* ./bundles/coreFramework/js/prebuild/JSTypeTemplate.sctjs - this is a Stratacode template file which is used to generate a JS class from a high-level code model object.  It gives you the opportunity to change many aspects of the generated Javascript code, such as the APIs to create a new class.  Other customizations can be done through annotations or by using the APIs provided in the StrataCode language runtime.
