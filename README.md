@@ -1,14 +1,20 @@
-## Introduction
+# StrataCode Java to JavaScript Converter Sample
 
-Welcome to the StrataCode java to javascript converter sample.  This is a sample project which includes a recent version of the StrataCode runtime in a project you can just checkout.
+Checkout this project for a quick start at using the Java to Javascript interpreter.  It includes a copy of the 'scc' command (and StrataCode libraries).
 
-To set expectations, StrataCode is still in beta.  There are over 1M lines of Java from a bunch of sample projects in the test suite just to validate the Java processing.  The JavaModel api supports Java 8 on the parsing side, and internally validates that code by converting them to anonymous inner classes.   
+## Status
 
-## Limitations
+StrataCode is still in beta.  There are over 1M lines of Java from a bunch of sample projects in the test suite just to validate the Java processing.  The JavaModel api supports Java 8 on the parsing side, and internally validates that code by converting them to anonymous inner classes.   
 
-The JS converter has been tested on about 200K lines of Java code, without workarounds.  There's a subset of the Java 6 APIs supported but often new APIs can be added by simply copying additional files from into a layer which extends js.sys and using that layer instead.  In this way, it's easy to build up different API profiles to limit the size of the generated JS files (but still share these files across multiple applications which is useful for caching).
+The JS converter has been tested on about 200K lines of Java code, without workarounds.  There's a subset of the Java 6 JSDK APIs supported but often new APIs can be added by simply copying additional files from into a layer which extends js.sys and using that layer instead.  In this way, it's easy to build up different API profiles to limit the size of the generated JS files (but still share these files across multiple applications which is useful for caching).
 
-The Javascript converter uses a slightly modified subset of the Apache Java sys and util classes and implements native JS for others.  Unfortunately the apache classes do not support lambda features and stopped at Java 6 in tracking the APIs.  There has been no testing of the lambdas or some of the more complex features of Java in the converter but Jeff is available to fix any problems you find, particularly if we can add some code you provde to the test suite.   We would like a version which uses the OpenJDK classes to really test lambdas but just haven't gotten around to testing that out.   Internally, lambdas are converted to anonymous inner classes during the code conversion, for validation purposes but they could just as easily be 'saved' to do a Java 8 to Java 6 conversion, and then to use those features in Javascript.   There is one subtle difference in how 'this' is treated in method references that we need to workaround via code-generation that should be a day or two to fix, but that only affects some method references.  
+To implement the JSDK classes, the Javascript converter uses a slightly modified subset of the Apache JSDK source files for some classes and implements native JS for others (those with 'native' java methods).  Unfortunately the Apache JSDK classes do not support lambda features and are no longer being maintained.  
+
+In the Java to JS converter, There has been no testing of the lambdas in Java 8.  We've tried to cover the rest of Java completely but there are likely other problems.  We are available to fix any problems you find, particularly if we can add code to test the new case so all features are covered in the test suite.  
+
+## Futures
+
+We would like a version which uses the OpenJDK classes to really test lambdas in JS and to get to 1M lines of code in the test suite.  Internally today, lambdas are converted to anonymous inner classes during the code conversion, for validation purposes but they could just as easily be 'saved' to do a Java 8 to Java 6/7 conversion, and then to use those features in Javascript.   There is one subtle difference in how 'this' is treated in method references that we need to workaround via code-generation that should be a day or two to fix, but that only affects some method references.  
 
 Otherwise, the major limitation in the converter is an obvious one - all number types in Java (int, float, Integer, etc) are converted to Javascript's single number type.  We could easily add selective workarounds for this feature by writing specific Integer, Float, Double classes (probably a native implementation just to be most efficient) and then use these selectively at code-gen time.  Some of the time you want to do that and sometimes you don't so it's not an easy choice, but with layers and annotation layers you will be able to customize that without modifying the original source code.  You can set a default for a subset of files and override for specific classes, fields, methods, etc. 
 
@@ -26,22 +32,25 @@ From this directory run:
 
 it should open your browser and in the JS console you'll see messages printed from the code.
 
-Look at bundles/userLayers/sampleLayer/sampleLayer.sc for the sample's layer definition file.  It is like the build.gradle file but using Java with StrataCode extensions.  It always has the same name as the directory it is in.
+See your generated javascript file in the js/sample.js file from "Source" view in the browser, or on the file system in: build/sampleLayer/web/js/sample.js.
 
-In this sample, the sampleLayer.sc file contains annotations that affect how the files in that layer are converted to Javascript, mainly using the JSSettings annotation (e.g. what file to put them into, what package prefix to use, etc).  It can extend other layers so modularize your code from the build perspective.
+Look at the (sampleLayer definition file)[bundles/userLayers/sampleLayer/sampleLayer.sc].  It is like the build.gradle file but using Java with StrataCode extensions.  It always has the same name as the directory it is in and extends one more base layers (i.e. modules it depends on).
 
-Any layer can also override files in layers that it extends. 
+In this sample, the sampleLayer.sc file contains the @JSSettings annotation which affect how the files in that layer are converted to Javascript.  Here we specify that all files in this layer are converted into JS and included in the specifie file.
 
-Look in bundles/coreFramework/js for the layers that control the Java to JS conversion.  There's not a great separation right now of the layers used for pure Java conversion and the web framework but that will be easy to fix.
+Any layer can also override files in layers that it extends.  A layer can use the StrataCode modify operator to add or override annotations in the base layer.  This gives you lots of flexibility in repackaging without having to copy source files.
+
+Look in (bundles/coreFramework/js)[https://github.com/stratacode/coreFramework/tree/master/js) for the layers that control the Java to JS conversion.  There's not a great separation right now of the layers used for pure Java conversion and the web framework but that will be easy to fix.
 
 The sampleLayer extends the js.allInOne.main layer which puts all of the code in your project into a single set of Javascript files.  It's less dependent on the StrataCode web framework than js.appPerPage.main and those dependencies can be removed out by overriding files (or we should create a new core-generic layer which is completely independent of the web framework, and one that works with NodeJS).
 
 One of the problems of converting between Java and JS is the potential for handling special cases that arise.  Using annotations you can workaround these problems in the generated code.  If you can't modify the source, you can add "annotation layers" which just add annotations using a StrataCode 'modify' operator (i.e. just putting "@JSSettings(...) MyClass {}"  in the right file in a layer which extends the layer containing MyClass.
 
-See [the javadoc](http://www.stratacode.com/javadoc/sc/js/JSSettings.html)
-# jsConverterSample
+Read [the intro article](http://www.stratacode.com/javaToJavascript.html)
 
-See your generated javascript file in the js/sample.js file from "Source" view in the browser, or on the file system in: build/sampleLayer/web/js/sample.js.
+See [the javadoc](http://www.stratacode.com/javadoc/sc/js/JSSettings.html)
+
+Read more about customizing the generation in the (framework documentation)[http://www.stratacode.com/jsFramework.html)
 
 ## Mapping Java classes to JS files
 
