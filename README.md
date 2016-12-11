@@ -40,7 +40,7 @@ In this sample, the sampleLayer.sc file contains the @JSSettings annotation whic
 
 Any layer can also override files in layers that it extends.  A layer can use the StrataCode modify operator to add or override annotations in the base layer.  This gives you lots of flexibility in repackaging without having to copy source files.
 
-Look in (bundles/coreFramework/js)[https://github.com/stratacode/coreFramework/tree/master/js) for the layers that control the Java to JS conversion.  There's not a great separation right now of the layers used for pure Java conversion and the web framework but that will be easy to fix.
+Look in (bundles/coreFramework/js)[https://github.com/stratacode/coreFramework/tree/master/js] for the layers that control the Java to JS conversion.  There's not a great separation right now of the layers used for pure Java conversion and the web framework but that will be easy to fix.
 
 The sampleLayer extends the js.allInOne.main layer which puts all of the code in your project into a single set of Javascript files.  It's less dependent on the StrataCode web framework than js.appPerPage.main and those dependencies can be removed out by overriding files (or we should create a new core-generic layer which is completely independent of the web framework, and one that works with NodeJS).
 
