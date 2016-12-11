@@ -34,13 +34,13 @@ it should open your browser and in the JS console you'll see messages printed fr
 
 See your generated javascript file in the js/sample.js file from "Source" view in the browser, or on the file system in: build/sampleLayer/web/js/sample.js.
 
-Look at the (sampleLayer definition file)[bundles/userLayers/sampleLayer/sampleLayer.sc].  It is like the build.gradle file but using Java with StrataCode extensions.  It always has the same name as the directory it is in and extends one more base layers (i.e. modules it depends on).
+Look at the [sampleLayer definition file](bundles/userLayers/sampleLayer/sampleLayer.sc).  It is like the build.gradle file but using Java with StrataCode extensions.  It always has the same name as the directory it is in and extends one more base layers (i.e. modules it depends on).
 
 In this sample, the sampleLayer.sc file contains the @JSSettings annotation which affect how the files in that layer are converted to Javascript.  Here we specify that all files in this layer are converted into JS and included in the specifie file.
 
 Any layer can also override files in layers that it extends.  A layer can use the StrataCode modify operator to add or override annotations in the base layer.  This gives you lots of flexibility in repackaging without having to copy source files.
 
-Look in (bundles/coreFramework/js)[https://github.com/stratacode/coreFramework/tree/master/js] for the layers that control the Java to JS conversion.  There's not a great separation right now of the layers used for pure Java conversion and the web framework but that will be easy to fix.
+Look in [bundles/coreFramework/js](https://github.com/stratacode/coreFramework/tree/master/js) for the layers that control the Java to JS conversion.  There's not a great separation right now of the layers used for pure Java conversion and the web framework but that will be easy to fix.
 
 The sampleLayer extends the js.allInOne.main layer which puts all of the code in your project into a single set of Javascript files.  It's less dependent on the StrataCode web framework than js.appPerPage.main and those dependencies can be removed out by overriding files (or we should create a new core-generic layer which is completely independent of the web framework, and one that works with NodeJS).
 
@@ -50,7 +50,7 @@ Read [the intro article](http://www.stratacode.com/javaToJavascript.html)
 
 See [the javadoc](http://www.stratacode.com/javadoc/sc/js/JSSettings.html)
 
-Read more about customizing the generation in the (framework documentation)[http://www.stratacode.com/jsFramework.html)
+Read more about customizing the generation in the [framework documentation](http://www.stratacode.com/jsFramework.html)
 
 ## Mapping Java classes to JS files
 
